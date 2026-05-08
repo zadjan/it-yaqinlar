@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(\n# Check if logo.png or asoschi.png exist anywhere on Desktop\nfind /home/ozodbek/Desktop -name \"*.png\" -o -name \"saytlogosi.png\" -o -name \"asoschi.png\" 2>/dev/null | head -20)",
+      "Read(//home/ozodbek/Desktop/**)"
+    ]
+  }
+}

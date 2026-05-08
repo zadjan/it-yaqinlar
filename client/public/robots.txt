@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /ozodbek-secret-panel
+
+Sitemap: https://ityaqinlar.uz/sitemap.xml
