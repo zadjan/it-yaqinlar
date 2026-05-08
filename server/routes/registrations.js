@@ -12,24 +12,20 @@ router.post('/', async (req, res) => {
     if (!name || !contact || !meetupId) {
       return res.status(400).json({ error: "Barcha maydonlar to'ldirilishi shart" });
     }
-    if (!contact.includes('@')) {
-      return res.status(400).json({ error: "Emailni to'g'ri kiriting" });
-    }
-    const meetup = await prisma.meetup.findUnique({ where: { id: Number(meetupId) } });
+const meetup = await prisma.meetup.findUnique({ where: { id: Number(meetupId) } });
     if (!meetup) return res.status(404).json({ error: 'Meetup topilmadi' });
 
     const existing = await prisma.registration.findFirst({
       where: { contact, meetupId: Number(meetupId) },
     });
     if (existing) {
-      return res.status(400).json({ error: "Siz allaqachon bu meetupga ro'yxatdan o'tgansiz!" });
+      return res.status(400).json({ error: "Bu telefon raqam allaqachon ro'yxatdan o'tgan!" });
     }
 
     const registration = await prisma.registration.create({
       data: { name, contact, meetupId: Number(meetupId) },
     });
 
-    sendRegistrationEmail(contact, name, meetup).catch(() => {});
 
     res.status(201).json(registration);
   } catch (err) {

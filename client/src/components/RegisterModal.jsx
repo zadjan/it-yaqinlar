@@ -12,6 +12,10 @@ export default function RegisterModal({ meetup, onClose }) {
     e.preventDefault();
     setError('');
     setInfo('');
+    if (form.contact.replace(/\D/g, '').length < 9) {
+      setError("Telefon raqamni to'g'ri kiriting");
+      return;
+    }
     setLoading(true);
     try {
       await axios.post('/api/registrations', {
@@ -59,7 +63,7 @@ export default function RegisterModal({ meetup, onClose }) {
                 Muvaffaqiyatli ro'yxatdan o'tdingiz!
               </h3>
               <p className="text-gray-500 dark:text-gray-400 mb-6">
-                Tabriklaymiz! Emailingizga tasdiqlash xati yuborildi 📧
+                Tabriklaymiz! Tez orada siz bilan bog'lanamiz 📞
               </p>
               <button onClick={onClose} className="btn-primary">
                 Yopish
@@ -82,13 +86,14 @@ export default function RegisterModal({ meetup, onClose }) {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Email *
+                  Telefon raqam *
                 </label>
                 <input
-                  type="email"
+                  type="tel"
+                  name="contact"
                   value={form.contact}
                   onChange={(e) => setForm({ ...form, contact: e.target.value })}
-                  placeholder="example@gmail.com"
+                  placeholder="+998 90 123 45 67"
                   required
                   className="input-field"
                 />
