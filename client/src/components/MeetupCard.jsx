@@ -23,9 +23,9 @@ export default function MeetupCard({ meetup, onRegister }) {
             <Calendar size={16} />
           </div>
           <span>
-            {date.toLocaleDateString('uz-UZ', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' })}
+            {date.toLocaleDateString('uz-UZ', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long', timeZone: 'Asia/Tashkent' })}
             {' — '}
-            {date.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit', hour12: false })}
+            {date.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Tashkent' })}
           </span>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">

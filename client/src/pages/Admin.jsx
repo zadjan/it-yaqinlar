@@ -90,19 +90,40 @@ function LoginForm({ onLogin }) {
 
 // --- Meetup form ---
 function MeetupForm({ initial, onSave, onCancel }) {
+  const toLocal = (d) => {
+    if (!d) return { date: '', time: '' };
+    const dt = new Date(d);
+    if (isNaN(dt)) return { date: '', time: '' };
+    const offset = dt.getTimezoneOffset();
+    const local = new Date(dt.getTime() - offset * 60000).toISOString();
+    return { date: local.slice(0, 10), time: local.slice(11, 16) };
+  };
+
+  const localInit = toLocal(initial?.date);
   const [form, setForm] = useState(
-    initial || { title: '', date: '', venue: '', topic: '', status: 'upcoming' }
+    initial
+      ? { title: initial.title, venue: initial.venue, topic: initial.topic, status: initial.status }
+      : { title: '', venue: '', topic: '', status: 'upcoming' }
   );
+  const [dateVal, setDateVal] = useState(localInit.date);
+  const [timeVal, setTimeVal] = useState(localInit.time);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+    if (!timeRegex.test(timeVal)) {
+      alert("To'g'ri vaqt kiriting (masalan: 14:00)");
+      return;
+    }
     setLoading(true);
     try {
+      const isoDate = `${dateVal}T${timeVal}:00+05:00`;
+      const submitForm = { ...form, date: isoDate };
       if (initial?.id) {
-        await api.put(`/meetups/${initial.id}`, form);
+        await api.put(`/meetups/${initial.id}`, submitForm);
       } else {
-        await api.post('/meetups', form);
+        await api.post('/meetups', submitForm);
       }
       onSave();
     } catch (err) {
@@ -110,13 +131,6 @@ function MeetupForm({ initial, onSave, onCancel }) {
     } finally {
       setLoading(false);
     }
-  };
-
-  const formatDate = (d) => {
-    if (!d) return '';
-    const dt = new Date(d);
-    if (isNaN(dt)) return d;
-    return dt.toISOString().slice(0, 16);
   };
 
   return (
@@ -127,11 +141,26 @@ function MeetupForm({ initial, onSave, onCancel }) {
           <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })}
             placeholder="IT Yaqinlar #3" required className="input-field" />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Sana va vaqt *</label>
-          <input type="datetime-local" value={formatDate(form.date)}
-            onChange={e => setForm({ ...form, date: e.target.value })}
-            required className="input-field" />
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Sana *</label>
+            <input type="date" value={dateVal} onChange={e => setDateVal(e.target.value)}
+              required className="input-field" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Vaqt *</label>
+            <input
+              type="text"
+              value={timeVal}
+              onChange={e => setTimeVal(e.target.value)}
+              placeholder="14:00"
+              pattern="[0-9]{2}:[0-9]{2}"
+              maxLength="5"
+              required
+              className="input-field"
+            />
+            <small className="text-gray-400 text-xs mt-1 block">24 soatlik format: 14:00</small>
+          </div>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Joy *</label>

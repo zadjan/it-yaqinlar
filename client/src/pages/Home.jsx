@@ -105,12 +105,12 @@ export default function Home() {
                   <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 text-sm">
                     <Calendar size={14} className="text-green-400 shrink-0" />
                     {new Date(nextMeetup.date).toLocaleDateString('uz-UZ', {
-                      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+                      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Tashkent',
                     })}
                   </div>
                   <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 text-sm">
                     <Clock size={14} className="text-green-400 shrink-0" />
-                    {new Date(nextMeetup.date).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}
+                    {new Date(nextMeetup.date).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Tashkent' })}
                   </div>
                   <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 text-sm">
                     <MapPin size={14} className="text-green-400 shrink-0" />
